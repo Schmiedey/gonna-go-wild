@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "gonna-go-wild",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "/Users/wesleyschmiedeskamp/Documents/gonna-go-wild", "-p", "8080", "-c-1"],
+      "port": 8080
+    }
+  ]
+}

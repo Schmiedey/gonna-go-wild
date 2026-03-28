@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GonnaGoWild — Wild Kratts Classic Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green-dark: #1a5c2a;
+            --green-mid: #2d8a4e;
+            --green-light: #4fc978;
+            --green-glow: #6fff9e;
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --text: #f0f6fc;
+            --text-muted: #8b949e;
+            --accent: #ffcc00;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ---- HEADER ---- */
+        header {
+            background: linear-gradient(135deg, var(--green-dark) 0%, #0f3d1a 100%);
+            border-bottom: 3px solid var(--green-light);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234fc978' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        header h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            letter-spacing: 3px;
+            color: var(--accent);
+            text-shadow: 2px 2px 0 var(--green-dark), 0 0 20px rgba(79, 201, 120, 0.4);
+            position: relative;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: var(--green-glow);
+            margin-top: 0.3rem;
+            position: relative;
+        }
+
+        /* ---- NAV ---- */
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 0.7rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 1px solid rgba(79,201,120,0.15);
+        }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+        nav a:hover, nav a.active { color: var(--green-light); }
+
+        /* ---- MAIN ---- */
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            color: var(--green-light);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* ---- GAME GRID ---- */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(79,201,120,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--green-light);
+            box-shadow: 0 8px 30px rgba(79,201,120,0.15);
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--green-dark), #0a2e14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-thumb .emoji {
+            font-size: 4rem;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+        .game-thumb .play-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .game-card:hover .play-overlay { opacity: 1; }
+        .play-btn {
+            width: 60px; height: 60px;
+            background: var(--green-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-btn::after {
+            content: '';
+            width: 0; height: 0;
+            border-left: 22px solid white;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            margin-left: 4px;
+        }
+
+        .game-info { padding: 1rem 1.2rem; }
+        .game-info h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.3rem;
+            color: var(--text);
+        }
+        .game-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .game-tag {
+            display: inline-block;
+            background: rgba(79,201,120,0.15);
+            color: var(--green-light);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(79,201,120,0.1);
+            margin-top: 3rem;
+        }
+
+        /* ---- LOADING BANNER ---- */
+        .status-banner {
+            background: rgba(255,204,0,0.1);
+            border: 1px solid rgba(255,204,0,0.3);
+            color: var(--accent);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .status-banner.show { display: block; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .game-grid { grid-template-columns: 1fr; }
+            main { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GONNA GO WILD</h1>
+    <p>Kratts Universe — Classic Flash Games Archive</p>
+</header>
+
+<nav>
+    <a href="index.html" class="active">Games</a>
+    <a href="#" style="opacity:0.4; pointer-events:none;">Shop (Coming Soon)</a>
+</nav>
+
+<main>
+    <div class="status-banner" id="statusBanner"></div>
+
+    <h2 class="section-title">Classic Wild Kratts Games</h2>
+
+    <div class="game-grid" id="gameGrid">
+        <!-- Games are injected by JS below -->
+    </div>
+</main>
+
+<footer>
+    <p>GonnaGoWild &bull; Kratts Universe &bull; Games preserved via Internet Archive &bull; Powered by <a href="https://ruffle.rs" style="color:var(--green-light)">Ruffle</a> Flash Emulator</p>
+    <p style="margin-top:0.5rem;">Wild Kratts is a trademark of the Kratt Brothers Company. This is a fan preservation project.</p>
+</footer>
+
+<!-- Ruffle Flash Emulator (CDN) -->
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
+<script>
+// ============================================================
+// GAME DATABASE
+// Each game has: id, title, description, emoji, tag, swfFile
+// The swfFile should be in the /games/ folder
+// ============================================================
+const GAMES = [
+    {
+        id: "go-cheetah-go",
+        title: "Go Cheetah Go!",
+        description: "Race across the savanna as a cheetah! Use creature power to sprint at top speed.",
+        emoji: "\u{1F406}",
+        tag: "Action",
+        swfFile: "CheetahGame.swf"
+    },
+    {
+        id: "creature-roundup",
+        title: "Creature Roundup",
+        description: "Round up wild creatures and learn about their amazing abilities.",
+        emoji: "\u{1F43E}",
+        tag: "Adventure",
+        swfFile: "RoundUp.swf"
+    },
+    {
+        id: "kickboxing-kangaroo",
+        title: "Kickboxing Kangaroo",
+        description: "Channel the power of a kangaroo in this epic kickboxing challenge!",
+        emoji: "\u{1F998}",
+        tag: "Fighting",
+        swfFile: "KangarooGame.swf"
+    },
+    {
+        id: "draco-glide",
+        title: "Glide Draco Glide",
+        description: "Soar through the rainforest canopy as a Draco lizard!",
+        emoji: "\u{1F409}",
+        tag: "Flying",
+        swfFile: "DracoGame.swf"
+    },
+    {
+        id: "going-batty",
+        title: "Going Batty",
+        description: "Navigate through the night sky using bat echolocation powers.",
+        emoji: "\u{1F987}",
+        tag: "Adventure",
+        swfFile: "BatGame.swf"
+    },
+    {
+        id: "slither-run",
+        title: "Slither Run",
+        description: "Slither your way through obstacles as a speedy snake!",
+        emoji: "\u{1F40D}",
+        tag: "Action",
+        swfFile: "SlitherRun.swf"
+    },
+    {
+        id: "ride-on-remora",
+        title: "Ride On Remora",
+        description: "Hitch a ride on ocean creatures as a remora fish!",
+        emoji: "\u{1F41F}",
+        tag: "Ocean",
+        swfFile: "RemoraGame.swf"
+    },
+    {
+        id: "croc-hatch",
+        title: "Croc Hatch",
+        description: "Help baby crocodiles hatch and make it safely to the water!",
+        emoji: "\u{1F40A}",
+        tag: "Puzzle",
+        swfFile: "CrocHatch.swf"
+    },
+    {
+        id: "firefly-flash",
+        title: "Firefly Flash",
+        description: "Light up the night by matching firefly flash patterns.",
+        emoji: "\u{2728}",
+        tag: "Puzzle",
+        swfFile: "FireflyGame.swf"
+    },
+    {
+        id: "frogfish-feast",
+        title: "Frogfish Feast",
+        description: "Ambush prey with the incredible camouflage of a frogfish!",
+        emoji: "\u{1F41B}",
+        tag: "Action",
+        swfFile: "FrogFish.swf"
+    },
+    {
+        id: "caracal-leap",
+        title: "Caracal Leap",
+        description: "Leap high into the air to catch birds like a caracal cat!",
+        emoji: "\u{1F431}",
+        tag: "Action",
+        swfFile: "CaracalGame.swf"
+    },
+    {
+        id: "go-nuts",
+        title: "Go Nuts!",
+        description: "Collect and store acorns like a squirrel before winter hits!",
+        emoji: "\u{1F43F}\u{FE0F}",
+        tag: "Arcade",
+        swfFile: "SquirrelGame.swf"
+    },
+    {
+        id: "webtastic",
+        title: "Webtastic",
+        description: "Spin webs and catch bugs with spider creature power!",
+        emoji: "\u{1F577}\u{FE0F}",
+        tag: "Puzzle",
+        swfFile: "Webtastic.swf"
+    },
+    {
+        id: "dolphin-dive",
+        title: "Dolphin Dive",
+        description: "Dive deep into the ocean as a dolphin and explore underwater!",
+        emoji: "\u{1F42C}",
+        tag: "Ocean",
+        swfFile: "DolphinDive.swf"
+    },
+    {
+        id: "creaturepedia",
+        title: "Creaturepedia",
+        description: "The ultimate creature encyclopedia! Learn about all the animals.",
+        emoji: "\u{1F4D6}",
+        tag: "Reference",
+        swfFile: "Creaturepedia.swf"
+    }
+];
+
+// Habitat Explorer games (these are virtual habitats, not traditional games)
+const HABITATS = [
+    {
+        id: "african-savannah",
+        title: "African Savannah",
+        description: "Explore the African Savannah and discover its incredible creatures.",
+        emoji: "\u{1F981}",
+        tag: "Habitat",
+        swfFile: "SavannahHabitat.swf"
+    },
+    {
+        id: "australian-outback",
+        title: "Australian Outback",
+        description: "Venture into the Australian Outback and meet its unique wildlife.",
+        emoji: "\u{1F998}",
+        tag: "Habitat",
+        swfFile: "AustraliaHabitat.swf"
+    },
+    {
+        id: "rainforest",
+        title: "Rainforest",
+        description: "Explore the lush rainforest teeming with incredible wildlife.",
+        emoji: "\u{1F334}",
+        tag: "Habitat",
+        swfFile: "RainforestHabitat.swf"
+    },
+    {
+        id: "coral-reef",
+        title: "Coral Reef",
+        description: "Dive into the vibrant coral reef ecosystem and its marine life.",
+        emoji: "\u{1F3DD}\u{FE0F}",
+        tag: "Habitat",
+        swfFile: "ReefHabitat.swf"
+    },
+    {
+        id: "boreal-forest",
+        title: "Boreal Forest",
+        description: "Wander through the northern Boreal Forest and its wildlife.",
+        emoji: "\u{1F43B}",
+        tag: "Habitat",
+        swfFile: "BorealHabitat.swf"
+    },
+    {
+        id: "ocean-habitat",
+        title: "Ocean Habitat",
+        description: "Plunge into the deep ocean and discover marine creatures.",
+        emoji: "\u{1F30A}",
+        tag: "Habitat",
+        swfFile: "OceanHabitat.swf"
+    },
+    {
+        id: "sonoran-desert",
+        title: "Sonoran Desert",
+        description: "Survive the heat of the Sonoran Desert and find hidden creatures.",
+        emoji: "\u{1F3DC}\u{FE0F}",
+        tag: "Habitat",
+        swfFile: "DesertHabitat.swf"
+    },
+    {
+        id: "your-room",
+        title: "Your Room",
+        description: "Even your room is a habitat! Discover the creatures living around you.",
+        emoji: "\u{1F3E0}",
+        tag: "Habitat",
+        swfFile: "AvatarRoom.swf"
+    }
+];
+
+// ============================================================
+// RENDER GAME CARDS
+// ============================================================
+function createCard(game) {
+    const card = document.createElement('a');
+    card.className = 'game-card';
+    card.href = `play.html?game=${game.id}`;
+    card.innerHTML = `
+        <div class="game-thumb">
+            <span class="emoji">${game.emoji}</span>
+            <div class="play-overlay"><div class="play-btn"></div></div>
+        </div>
+        <div class="game-info">
+            <h3>${game.title}</h3>
+            <p>${game.description}</p>
+            <span class="game-tag">${game.tag}</span>
+        </div>
+    `;
+    return card;
+}
+
+const grid = document.getElementById('gameGrid');
+
+// Add action games
+GAMES.forEach(g => grid.appendChild(createCard(g)));
+
+// Add habitat section
+const habitatTitle = document.createElement('h2');
+habitatTitle.className = 'section-title';
+habitatTitle.textContent = 'Habitat Explorers';
+habitatTitle.style.marginTop = '2.5rem';
+grid.parentElement.insertBefore(habitatTitle, null);
+
+const habitatGrid = document.createElement('div');
+habitatGrid.className = 'game-grid';
+HABITATS.forEach(g => habitatGrid.appendChild(createCard(g)));
+grid.parentElement.appendChild(habitatGrid);
+
+// ============================================================
+// STORE GAME DATA FOR PLAYER PAGE
+// ============================================================
+window.ALL_GAMES = [...GAMES, ...HABITATS];
+if (typeof(Storage) !== "undefined") {
+    localStorage.setItem('wk_games', JSON.stringify(window.ALL_GAMES));
+}
+</script>
+
+</body>
+</html>
