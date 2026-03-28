@@ -202,10 +202,36 @@
         }
         .status-banner.show { display: block; }
 
+        /* Mobile notice */
+        .mobile-notice {
+            display: none;
+            background: rgba(255,204,0,0.1);
+            border: 1px solid rgba(255,204,0,0.25);
+            color: var(--accent);
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
         @media (max-width: 600px) {
             header h1 { font-size: 2rem; }
-            .game-grid { grid-template-columns: 1fr; }
+            .game-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
             main { padding: 1rem; }
+            nav { gap: 1rem; padding: 0.7rem 1rem; }
+            nav a { font-size: 0.85rem; }
+            .game-thumb { height: 140px; }
+            .game-card { min-height: 44px; }
+            .mobile-notice { display: block; }
+            footer { font-size: 0.7rem; padding: 1.5rem 1rem; }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            .game-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -223,6 +249,10 @@
 
 <main>
     <div class="status-banner" id="statusBanner"></div>
+
+    <div class="mobile-notice">
+        These games were made for mouse &amp; keyboard — for the best experience, play on a computer or rotate to landscape!
+    </div>
 
     <h2 class="section-title">Classic Wild Kratts Games</h2>
 
